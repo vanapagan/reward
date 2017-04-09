@@ -37,6 +37,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
         if (canBuy(next_val)) {
             $scope.next_cursor_cost = next_val + 2 * $scope.cursor_level;
             $scope.cursor_level += 1;
+            $scope.click_value += $scope.cursor_level;
         }
     };
 
@@ -70,5 +71,18 @@ myApp.controller('cookieController', function ($scope, $interval) {
     function addToTotal(val) {
         $scope.cookies_clicked += val;
     }
+    
+$("#cookie").click(function(e) {
+    
+    var obj = $("#clone").clone();
+    $("body").append(obj);
+    obj.html("+"+ $scope.click_value);
+	obj.offset({left: e.pageX-10, top: e.pageY-25});
+    
+    obj.animate({"top": "-=100px"}, 1000, "linear", function() {
+		$(this).remove();
+	});	
+
+});
 
 });

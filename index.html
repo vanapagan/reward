@@ -18,6 +18,7 @@
             <div class="cookie-cell" flex="33" flex-xs="100" align="center" layout="column">
                 <div>
                     <img id="cookie" src="cookie.png" alt="Cookie" ng-click="incrementCookieCount(click_value + cursor_level)">
+                    <div id="clone"></div>
                 </div>
                 <div id="cookie_count">
                     <p>Cookies: {{cookie_count}}</p>
@@ -25,9 +26,12 @@
             </div>
             <div class="stats-cell" flex="66" flex-xs="100">
                 <h3>Store</h3>
-                {{cursor_level}} Cursor <md-button class="md-raised md-primary" ng-click="buyNewCursor(next_cursor_cost)">{{next_cursor_cost}}</md-button> {{getPercentageOfTotalAutoclicked}}<br />
-                {{grandma_level}} Grandma <md-button class="md-raised md-primary" ng-click="buyNewGrandma(next_grandma_cost)">{{next_grandma_cost}}</md-button><br />
-                {{autoclicker_level}} Autoclicker <md-button class="md-raised md-primary" ng-click="buyNewAutoclicker(next_autoclicker_cost)">{{next_autoclicker_cost}}</md-button><br />
+                {{cursor_level}} Cursor
+                <md-button class="md-raised md-primary" ng-click="buyNewCursor(next_cursor_cost)">{{next_cursor_cost}}</md-button> {{getPercentageOfTotalAutoclicked}}<br /> {{grandma_level}} Grandma
+                <md-button
+                    class="md-raised md-primary" ng-click="buyNewGrandma(next_grandma_cost)">{{next_grandma_cost}}</md-button><br /> {{autoclicker_level}} Autoclicker
+                <md-button class="md-raised md-primary"
+                    ng-click="buyNewAutoclicker(next_autoclicker_cost)">{{next_autoclicker_cost}}</md-button><br />
             </div>
         </div>
 
