@@ -38,11 +38,23 @@ body {
 
 #status.achievement {
   display: none;
-  
   position: absolute;
   left: 50%;
   bottom: -120px;
   margin-left: -160px;
+}
+
+.table>tbody>tr>td {
+    vertical-align: middle;
+}
+
+.icon {
+    width: 1.8em;
+    height: 1.8em;
+}
+
+.buy-button {
+    width: 80%;
 }
 
 .achievement {

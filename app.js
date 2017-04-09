@@ -14,6 +14,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
     $scope.next_autoclicker_cost = 100;
 
     $scope.cookies_clicked = 0;
+    $scope.cookies_self_clicked = 0;
     $scope.cookies_autoclicked = 0;
     $scope.cookies_baked = 0;
 
@@ -39,6 +40,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
 
         if (e !== null) {
             obj.offset({ left: e.pageX - 10, top: e.pageY - 25 });
+            $scope.cookies_self_clicked += increment_size;
         } else {
             var position = $("#cookie").position();
             var img = document.getElementById('cookie');
@@ -59,6 +61,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
         });
         audioClick.play();
         $scope.cookie_count += increment_size;
+        $scope.cookies_clicked += increment_size;
         addToTotal(increment_size);
     };
 
@@ -70,6 +73,14 @@ myApp.controller('cookieController', function ($scope, $interval) {
             return false;
         }
     };
+
+    $scope.formatDecimal = function (val, clicked) {
+        console.log(clicked);
+        if (clicked == 0) {
+            return (0).toFixed(2);
+        }
+        return (val / clicked * 100).toFixed(2);
+    }
 
     $scope.cannotBuy = function (cost) {
         if ($scope.cookie_count >= cost) {
@@ -136,22 +147,21 @@ myApp.controller('cookieController', function ($scope, $interval) {
     var baked100 = false;
 
     function addToTotal(val) {
-        $scope.cookies_clicked += val;
         if ($scope.cookies_clicked >= 15 && !baked15) {
             baked15 = true;
-            Achievements.show('Bake 15 cookies');
+            Achievements.show('Click 15 cookies');
             audioSuccess.play();
         } else if ($scope.cookies_clicked >= 30 && !baked30) {
             baked30 = true;
-            Achievements.show('Bake 30 cookies');
+            Achievements.show('Click 30 cookies');
             audioSuccess.play();
         } else if ($scope.cookies_clicked >= 75 && !baked75) {
             baked75 = true;
-            Achievements.show('Bake 75 cookies');
+            Achievements.show('Click 75 cookies');
             audioSuccess.play();
         } else if ($scope.cookies_clicked >= 100 && !baked100) {
             baked100 = true;
-            Achievements.show('Bake 100 cookies');
+            Achievements.show('Click 100 cookies');
             audioSuccess.play();
         }
     }
@@ -163,23 +173,19 @@ $(document).ready(function () {
     Achievements.register('Buy a Cursor');
     Achievements.register('Buy a Grandma');
     Achievements.register('Buy an Autoclicker');
-    Achievements.register('Bake 15 cookies');
-    Achievements.register('Bake 30 cookies');
-    Achievements.register('Bake 75 cookies');
-    Achievements.register('Bake 100 cookies');
+    Achievements.register('Click 15 cookies');
+    Achievements.register('Click 30 cookies');
+    Achievements.register('Click 75 cookies');
+    Achievements.register('Click 100 cookies');
 });
 
-// Achievement "Singleton": Revealing module pattern
 Achievements = function () {
-    //Private object "array" stores all achievements
     var array = {},
         _localStorageKey,
 
         initialize = function (localStorageKey) {
-            // Saves localStorage key internally
             _localStorageKey = localStorageKey;
 
-            // Loads achievements from local storage if any
             if (window.localStorage)
                 if ((typeof (window.localStorage[_localStorageKey]) != "undefined") && (window.localStorage[_localStorageKey] != null) && (window.localStorage[_localStorageKey] != "")) array = JSON.parse(window.localStorage[_localStorageKey]);
         },
@@ -207,14 +213,12 @@ Achievements = function () {
         },
 
         clear = function () {
-            // Reset active achievements
             for (var i in array) {
                 if (array[i]["active"]) array[i]["active"] = false;
             }
         },
 
         list = function () {
-            // Locked achievements will be shown in a grey-ish color
             var result = "";
             for (var i in array) {
                 if (array[i]["active"]) result += '<div class="achievement"><span class="title">' + i + '</span><br /><span class="details">' + array[i]["description"] + '</span></div><br /><br />';
@@ -227,7 +231,6 @@ Achievements = function () {
         show = function (text) {
             if ((typeof (text) !== "string") || (text === "")) return;
 
-            // If someone forget to register an achievement
             if (array[text] === "undefined") register(text);
 
             if (!array[text]["active"]) {
