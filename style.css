@@ -1,15 +1,37 @@
+body {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #86c5da;
+    overflow:hidden
+}
+
 #cookie {
     max-width: 100%;
 }
 
-.cookie-cell {
-    padding: 5em;
+#cookie:active {
+    max-width: 99%;
 }
 
-.stats-cell {
+.heading-cell {
+    padding-top: 1em;
+    padding-left: 3em;
+}
+
+.cookie-cell {
+    padding: 3em;
+}
+
+.store-cell {
     padding: 2em;
 }
 
 #cookie_count {
     margin-top: 1em;
+}
+
+#clone {
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.4em;
 }
