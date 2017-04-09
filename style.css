@@ -1,0 +1,15 @@
+#cookie {
+    max-width: 100%;
+}
+
+.cookie-cell {
+    padding: 5em;
+}
+
+.stats-cell {
+    padding: 2em;
+}
+
+#cookie_count {
+    margin-top: 1em;
+}

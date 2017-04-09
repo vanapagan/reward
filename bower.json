@@ -1,0 +1,25 @@
+{
+  "name": "cookieclicker",
+  "homepage": "https://github.com/vanapagan/reward",
+  "authors": [
+    "Kristo Palo <kristopalo@hotmail.com>"
+  ],
+  "description": "Selle projektiga vaatleme kuidas vältida katsealuste puhul rutiinsete tegevuste käigus tekkivat frustratsiooni neid premeerides.",
+  "main": "bower.json",
+  "keywords": [
+    "cookieclicker"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material": "^1.1.3",
+    "bootstrap": "^3.3.7",
+    "particles.js": "^2.0.0"
+  }
+}

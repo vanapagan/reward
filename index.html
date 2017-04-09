@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Cookie Clicker</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body ng-app="myApp">
+
+    <div ng-controller="cookieController" layout="row" layout-xs="column" ng-cloak>
+
+        <div layout="row" layout-xs="column">
+            <div class="cookie-cell" flex="33" flex-xs="100" align="center" layout="column">
+                <div>
+                    <img id="cookie" src="cookie.png" alt="Cookie" ng-click="incrementCookieCount(click_value + cursor_level)">
+                </div>
+                <div id="cookie_count">
+                    <p>Cookies: {{cookie_count}}</p>
+                </div>
+            </div>
+            <div class="stats-cell" flex="66" flex-xs="100">
+                <h3>Store</h3>
+                {{cursor_level}} Cursor <md-button class="md-raised md-primary" ng-click="buyNewCursor(next_cursor_cost)">{{next_cursor_cost}}</md-button> {{getPercentageOfTotalAutoclicked}}<br />
+                {{grandma_level}} Grandma <md-button class="md-raised md-primary" ng-click="buyNewGrandma(next_grandma_cost)">{{next_grandma_cost}}</md-button><br />
+                {{autoclicker_level}} Autoclicker <md-button class="md-raised md-primary" ng-click="buyNewAutoclicker(next_autoclicker_cost)">{{next_autoclicker_cost}}</md-button><br />
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
