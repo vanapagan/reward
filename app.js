@@ -28,7 +28,8 @@ myApp.controller('cookieController', function ($scope, $interval) {
     $scope.grandma_bought = false;
     $scope.autoclicker_bought = false;
 
-    var audio = new Audio('success.wav');
+    var audioSuccess = new Audio('success.wav');
+    var audioClick = new Audio('click.wav');
 
     $scope.incrementCookieCount = function (e, increment_size) {
         var obj = $("#clone").clone();
@@ -56,7 +57,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
         }, 1000, "linear", function () {
             $(this).remove();
         });
-
+        audioClick.play();
         $scope.cookie_count += increment_size;
         addToTotal(increment_size);
     };
@@ -83,7 +84,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
             if (!$scope.cursor_bought) {
                 $scope.cursor_status = "UPGRADE";
                 $scope.cursor_bought = true;
-                audio.play();
+                audioSuccess.play();
                 Achievements.show('Buy a Cursor');
             }
             $scope.next_cursor_cost = next_val + 2 * $scope.cursor_level;
@@ -97,7 +98,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
             if (!$scope.grandma_bought) {
                 $scope.grandma_status = "UPGRADE";
                 $scope.grandma_bought = true;
-                audio.play();
+                audioSuccess.play();
                 Achievements.show('Buy a Grandma');
             }
             $scope.next_grandma_cost = next_val + 2 * $scope.grandma_level;
@@ -116,7 +117,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
             if (!$scope.autoclicker_bought) {
                 $scope.autoclicker_status = "UPGRADE";
                 $scope.autoclicker_bought = true;
-                audio.play();
+                audioSuccess.play();
                 Achievements.show('Buy an Autoclicker');
             }
             $scope.next_autoclicker_cost = next_val + 2 * $scope.autoclicker_level;
@@ -129,17 +130,17 @@ myApp.controller('cookieController', function ($scope, $interval) {
         }
     };
 
-    var bake10Cookies = false;
-    var bake30Cookies = false;
-
     function addToTotal(val) {
         $scope.cookies_clicked += val;
-        if ($scope.cookies_clicked == 10 && !bake10Cookies) {
-            bake10Cookies = true;
-            Achievements.show('Bake 10 cookies');
-        } else if ($scope.cookies_clicked == 30 && !bake30Cookies) {
-            bake30Cookies = true;
+        if ($scope.cookies_clicked == 15) {
+            Achievements.show('Bake 15 cookies');
+            audioSuccess.play();
+        } else if ($scope.cookies_clicked == 30) {
             Achievements.show('Bake 30 cookies');
+            audioSuccess.play();
+        } else if ($scope.cookies_clicked == 75) {
+            Achievements.show('Bake 75 cookies');
+            audioSuccess.play();
         }
     }
 
@@ -150,8 +151,9 @@ $(document).ready(function () {
     Achievements.register('Buy a Cursor');
     Achievements.register('Buy a Grandma');
     Achievements.register('Buy an Autoclicker');
-    Achievements.register('Bake 10 cookies');
+    Achievements.register('Bake 15 cookies');
     Achievements.register('Bake 30 cookies');
+    Achievements.register('Bake 75 cookies');
 });
 
 // Achievement "Singleton": Revealing module pattern
