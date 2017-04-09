@@ -130,16 +130,28 @@ myApp.controller('cookieController', function ($scope, $interval) {
         }
     };
 
+    var baked15 = false;
+    var baked30 = false;
+    var baked75 = false;
+    var baked100 = false;
+
     function addToTotal(val) {
         $scope.cookies_clicked += val;
-        if ($scope.cookies_clicked == 15) {
+        if ($scope.cookies_clicked >= 15 && !baked15) {
+            baked15 = true;
             Achievements.show('Bake 15 cookies');
             audioSuccess.play();
-        } else if ($scope.cookies_clicked == 30) {
+        } else if ($scope.cookies_clicked >= 30 && !baked30) {
+            baked30 = true;
             Achievements.show('Bake 30 cookies');
             audioSuccess.play();
-        } else if ($scope.cookies_clicked == 75) {
+        } else if ($scope.cookies_clicked >= 75 && !baked75) {
+            baked75 = true;
             Achievements.show('Bake 75 cookies');
+            audioSuccess.play();
+        } else if ($scope.cookies_clicked >= 100 && !baked100) {
+            baked100 = true;
+            Achievements.show('Bake 100 cookies');
             audioSuccess.play();
         }
     }
@@ -154,6 +166,7 @@ $(document).ready(function () {
     Achievements.register('Bake 15 cookies');
     Achievements.register('Bake 30 cookies');
     Achievements.register('Bake 75 cookies');
+    Achievements.register('Bake 100 cookies');
 });
 
 // Achievement "Singleton": Revealing module pattern
