@@ -2,7 +2,7 @@ var myApp = angular.module('myApp', ['ngMaterial']);
 
 myApp.controller('cookieController', function ($scope, $interval) {
 
-    $scope.cookie_count = 150;
+    $scope.cookie_count = 0;
     $scope.click_value = 1;
 
     $scope.cursor_level = 0;
@@ -27,6 +27,8 @@ myApp.controller('cookieController', function ($scope, $interval) {
     $scope.cursor_bought = false;
     $scope.grandma_bought = false;
     $scope.autoclicker_bought = false;
+
+    var audio = new Audio('success.wav');
 
     $scope.incrementCookieCount = function (e, increment_size) {
         var obj = $("#clone").clone();
@@ -56,6 +58,7 @@ myApp.controller('cookieController', function ($scope, $interval) {
         });
 
         $scope.cookie_count += increment_size;
+        addToTotal(increment_size);
     };
 
     var canBuy = function (cost) {
@@ -67,11 +70,21 @@ myApp.controller('cookieController', function ($scope, $interval) {
         }
     };
 
+    $scope.cannotBuy = function (cost) {
+        if ($scope.cookie_count >= cost) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
     $scope.buyNewCursor = function (next_val) {
         if (canBuy(next_val)) {
             if (!$scope.cursor_bought) {
                 $scope.cursor_status = "UPGRADE";
                 $scope.cursor_bought = true;
+                audio.play();
+                Achievements.show('Buy a Cursor');
             }
             $scope.next_cursor_cost = next_val + 2 * $scope.cursor_level;
             $scope.cursor_level += 1;
@@ -84,6 +97,8 @@ myApp.controller('cookieController', function ($scope, $interval) {
             if (!$scope.grandma_bought) {
                 $scope.grandma_status = "UPGRADE";
                 $scope.grandma_bought = true;
+                audio.play();
+                Achievements.show('Buy a Grandma');
             }
             $scope.next_grandma_cost = next_val + 2 * $scope.grandma_level;
             $scope.grandma_level += 1;
@@ -91,7 +106,6 @@ myApp.controller('cookieController', function ($scope, $interval) {
             $interval(function () {
                 $scope.incrementCookieCount(null, $scope.grandma_level);
                 $scope.cookies_baked += $scope.grandma_level;
-                addToTotal($scope.grandma_level);
             }, grandma_interval);
         }
     };
@@ -102,6 +116,8 @@ myApp.controller('cookieController', function ($scope, $interval) {
             if (!$scope.autoclicker_bought) {
                 $scope.autoclicker_status = "UPGRADE";
                 $scope.autoclicker_bought = true;
+                audio.play();
+                Achievements.show('Buy an Autoclicker');
             }
             $scope.next_autoclicker_cost = next_val + 2 * $scope.autoclicker_level;
             $scope.autoclicker_level += 1;
@@ -109,13 +125,123 @@ myApp.controller('cookieController', function ($scope, $interval) {
             $interval(function () {
                 $scope.incrementCookieCount(null, $scope.autoclicker_level);
                 $scope.cookies_autoclicked += $scope.autoclicker_level;
-                addToTotal($scope.autoclicker_level);
             }, autoclicker_interval);
         }
     };
 
+    var bake10Cookies = false;
+    var bake30Cookies = false;
+
     function addToTotal(val) {
         $scope.cookies_clicked += val;
+        if ($scope.cookies_clicked == 10 && !bake10Cookies) {
+            bake10Cookies = true;
+            Achievements.show('Bake 10 cookies');
+        } else if ($scope.cookies_clicked == 30 && !bake30Cookies) {
+            bake30Cookies = true;
+            Achievements.show('Bake 30 cookies');
+        }
     }
 
 });
+
+$(document).ready(function () {
+    Achievements.initialize('myGame');
+    Achievements.register('Buy a Cursor');
+    Achievements.register('Buy a Grandma');
+    Achievements.register('Buy an Autoclicker');
+    Achievements.register('Bake 10 cookies');
+    Achievements.register('Bake 30 cookies');
+});
+
+// Achievement "Singleton": Revealing module pattern
+Achievements = function () {
+    //Private object "array" stores all achievements
+    var array = {},
+        _localStorageKey,
+
+        initialize = function (localStorageKey) {
+            // Saves localStorage key internally
+            _localStorageKey = localStorageKey;
+
+            // Loads achievements from local storage if any
+            if (window.localStorage)
+                if ((typeof (window.localStorage[_localStorageKey]) != "undefined") && (window.localStorage[_localStorageKey] != null) && (window.localStorage[_localStorageKey] != "")) array = JSON.parse(window.localStorage[_localStorageKey]);
+        },
+
+        register = function (text, description, icon) {
+            if ((typeof (text) !== "string") || (text === "")) return;
+
+            array[text] = { active: false };
+            if (typeof (description) !== "undefined") array[text]["description"] = description;
+            if (typeof (icon) !== "undefined") array[text]["icon"] = icon;
+        },
+
+        getCount = function () {
+            var count = 0;
+            for (var i in array) count++;
+            return count;
+        },
+
+        getUnlockedCount = function () {
+            var count = 0;
+            for (var i in array) {
+                if (array[i]["active"]) count++;
+            }
+            return count;
+        },
+
+        clear = function () {
+            // Reset active achievements
+            for (var i in array) {
+                if (array[i]["active"]) array[i]["active"] = false;
+            }
+        },
+
+        list = function () {
+            // Locked achievements will be shown in a grey-ish color
+            var result = "";
+            for (var i in array) {
+                if (array[i]["active"]) result += '<div class="achievement"><span class="title">' + i + '</span><br /><span class="details">' + array[i]["description"] + '</span></div><br /><br />';
+                else result += '<div class="achievement locked"><span class="title">' + i + '</span><br /><span class="details">' + array[i]["description"] + '</span></div><br /><br />';
+            }
+
+            return result;
+        },
+
+        show = function (text) {
+            if ((typeof (text) !== "string") || (text === "")) return;
+
+            // If someone forget to register an achievement
+            if (array[text] === "undefined") register(text);
+
+            if (!array[text]["active"]) {
+                if ((typeof (array[text].icon) != "undefined") && (array[text].icon != "")) $('#achievement_box').css("background-image", "url(" + array[text].icon + ")");
+
+
+                $('#status.achievement #text').html(text);
+                $('#status.achievement').show();
+                $('#status.achievement').css({ opacity: 0.0 });
+
+                $('#status.achievement').animate({ opacity: 1.0, bottom: '8px' }, 750);
+
+                setTimeout(function () {
+                    $('#status.achievement').animate({ opacity: 0.0, bottom: '-120px' }, 750, "linear", function () { $('#status.achievement').hide(); });
+                }, 5000);
+
+                array[text].active = true;
+            }
+
+            if (window.localStorage) window.localStorage[_localStorageKey] = JSON.stringify(array);
+        };
+
+    return {
+        initialize: initialize,
+        getCount: getCount,
+        getUnlockedCount: getUnlockedCount,
+        clear: clear,
+        list: list,
+        register: register,
+        show: show
+    };
+}();

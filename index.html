@@ -35,7 +35,7 @@
                             Level {{cursor_level}}
                         </td>
                         <td>
-                            <md-button class="md-raised md-primary" ng-click="buyNewCursor(next_cursor_cost)">{{cursor_status}} {{next_cursor_cost}}</md-button>
+                            <md-button class="md-raised md-primary" ng-click="buyNewCursor(next_cursor_cost)" ng-disabled="cannotBuy(next_cursor_cost)">{{cursor_status}} {{next_cursor_cost}}</md-button>
                         </td>
                     </tr>
                     <tr>
@@ -44,7 +44,7 @@
                             Level {{grandma_level}}
                         </td>
                         <td>
-                            <md-button class="md-raised md-primary" ng-click="buyNewGrandma(next_grandma_cost)">{{grandma_status}} {{next_grandma_cost}}</md-button>
+                            <md-button class="md-raised md-primary" ng-click="buyNewGrandma(next_grandma_cost)" ng-disabled="cannotBuy(next_grandma_cost)">{{grandma_status}} {{next_grandma_cost}}</md-button>
                         </td>
                     </tr>
                     <tr>
@@ -53,13 +53,14 @@
                             Level {{autoclicker_level}}
                         </td>
                         <td>
-                            <md-button class="md-raised md-primary" ng-click="buyNewAutoclicker(next_autoclicker_cost)">{{autoclicker_status}} {{next_autoclicker_cost}}</md-button>
+                            <md-button class="md-raised md-primary" ng-click="buyNewAutoclicker(next_autoclicker_cost)" ng-disabled="cannotBuy(next_autoclicker_cost)">{{autoclicker_status}} {{next_autoclicker_cost}}</md-button>
                         </td>
                     </tr>
                 </table>
             </div>
             <div flex="15" flex-xs="100">
             </div>
+            <div id="status" class="achievement"><span class="title">Achievement unlocked</span><br/><span id="text">Some text</span></div>
         </div>
 
 
