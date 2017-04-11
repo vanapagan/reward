@@ -4,6 +4,8 @@ myApp.controller('cookieController', function ($scope, $interval) {
 
     $scope.cookie_count = 0;
     $scope.click_value = 1;
+    $scope.total_clicks = 0;
+    $scope.achievemnentsCounter = 0;
 
     $scope.cursor_level = 0;
     $scope.grandma_level = 0;
@@ -29,10 +31,22 @@ myApp.controller('cookieController', function ($scope, $interval) {
     $scope.grandma_bought = false;
     $scope.autoclicker_bought = false;
 
+
     var audioSuccess = new Audio('success.wav');
     var audioClick = new Audio('click.wav');
+    var audioDing = new Audio('ding.wav');
+    var audioPeep = new Audio('peeppeep.wav');
 
     $scope.incrementCookieCount = function (e, increment_size) {
+        if (++$scope.total_clicks % 3 == 0) {
+            audioDing.play();
+            $('#clone').css('color',"yellow");
+            
+            } else {
+            audioClick.play();
+            $('#clone').css('color',"white");
+            };
+
         var obj = $("#clone").clone();
         $("body").append(obj);
 
@@ -49,9 +63,13 @@ myApp.controller('cookieController', function ($scope, $interval) {
             obj.offset({
                 left: position.left + width / 2 + 20,
                 top: position.top + height / 2 + 20
-            });
+                 
+        
+        })
+                       
         }
-        obj.css("color: white");
+        
+        
         obj.animate({
             "top": "-=100px",
             "opacity": 0.10,
@@ -59,10 +77,37 @@ myApp.controller('cookieController', function ($scope, $interval) {
         }, 1000, "linear", function () {
             $(this).remove();
         });
-        audioClick.play();
+        
         $scope.cookie_count += increment_size;
         $scope.cookies_clicked += increment_size;
         addToTotal(increment_size);
+
+        if($scope.cookie_count - $scope.next_cursor_cost > $scope.click_value - 3) {
+            $("#cursorText").css('animationName',"cursorText");
+            $("#cursorText").css('animationDuration',"2s");
+
+        } else {
+            $("#cursorText").css('animationName',"");  
+
+        }
+        
+        if($scope.cookie_count - $scope.next_grandma_cost > $scope.click_value - 10) {
+            $("#grandmaText").css('animationName',"grandmaText");
+            $("#grandmaText").css('animationDuration',"2s");
+
+        } else {
+            $("#grandmaText").css('animationName',"");  
+
+        }
+        
+        if($scope.cookie_count - $scope.next_autoclicker_cost > $scope.click_value - 20) {
+            $("#clickerText").css('animationName',"clickerText");
+            $("#clickerText").css('animationDuration',"2s");
+
+        } else {
+            $("#clickerText").css('animationName',"");  
+
+        }
     };
 
     var canBuy = function (cost) {
@@ -91,12 +136,17 @@ myApp.controller('cookieController', function ($scope, $interval) {
     };
 
     $scope.buyNewCursor = function (next_val) {
+
+        
         if (canBuy(next_val)) {
             if (!$scope.cursor_bought) {
                 $scope.cursor_status = "UPGRADE";
                 $scope.cursor_bought = true;
                 audioSuccess.play();
                 Achievements.show('Buy a Cursor');
+                $('#a5').css("display", "block");
+                $('#a5').text('Buy a Cursor');
+                $('#a5').css('font-weight', 'bold');
             }
             $scope.next_cursor_cost = next_val + 2 * $scope.cursor_level;
             $scope.cursor_level += 1;
@@ -111,6 +161,10 @@ myApp.controller('cookieController', function ($scope, $interval) {
                 $scope.grandma_bought = true;
                 audioSuccess.play();
                 Achievements.show('Buy a Grandma');
+                $('#a6').css("display", "block");
+                $('#a6').text('Buy a Grandma');
+                $('#a6').css('font-weight', 'bold');
+                
             }
             $scope.next_grandma_cost = next_val + 2 * $scope.grandma_level;
             $scope.grandma_level += 1;
@@ -130,6 +184,9 @@ myApp.controller('cookieController', function ($scope, $interval) {
                 $scope.autoclicker_bought = true;
                 audioSuccess.play();
                 Achievements.show('Buy an Autoclicker');
+                $('#a7').css("display", "block");
+                $('#a7').text('Buy a Autoclicker');
+                $('#a7').css('font-weight', 'bold');
             }
             $scope.next_autoclicker_cost = next_val + 2 * $scope.autoclicker_level;
             $scope.autoclicker_level += 1;
@@ -145,24 +202,55 @@ myApp.controller('cookieController', function ($scope, $interval) {
     var baked30 = false;
     var baked75 = false;
     var baked100 = false;
+    var baked15warning = false;
+    var baked30warning = false;
+    var baked75warning = false;
+    var baked100warning = false;
 
     function addToTotal(val) {
+        
+        if ($scope.cookies_clicked >= 10 && !baked15 && !baked15warning) {
+            $('#a1').css("display", "block");
+            baked15warning = true;
+            audioPeep.play();
+        } else if ($scope.cookies_clicked >= 25 && !baked30 && !baked30warning) {
+            $('#a2').css("display", "block");
+            baked30warning = true;
+            audioPeep.play();
+        } else if ($scope.cookies_clicked >= 70 && !baked75 && !baked75warning) {
+            $('#a3').css("display", "block");
+            baked75warning = true;
+            audioPeep.play();
+        } else if ($scope.cookies_clicked >= 95 && !baked100 && !baked100warning) {
+            $('#a4').css("display", "block");
+            baked100warning = true;
+            audioPeep.play();
+        }
+        
         if ($scope.cookies_clicked >= 15 && !baked15) {
             baked15 = true;
             Achievements.show('Click 15 cookies');
             audioSuccess.play();
+            $('#a1').text('Click 15 cookies');
+            $('#a1').css('font-weight', 'bold');
         } else if ($scope.cookies_clicked >= 30 && !baked30) {
             baked30 = true;
             Achievements.show('Click 30 cookies');
             audioSuccess.play();
+            $('#a2').text('Click 30 cookies');
+            $('#a2').css('font-weight', 'bold');
         } else if ($scope.cookies_clicked >= 75 && !baked75) {
             baked75 = true;
             Achievements.show('Click 75 cookies');
             audioSuccess.play();
+            $('#a3').text('Click 75 cookies');
+            $('#a3').css('font-weight', 'bold');
         } else if ($scope.cookies_clicked >= 100 && !baked100) {
             baked100 = true;
             Achievements.show('Click 100 cookies');
             audioSuccess.play();
+            $('#a4').text('Click 100 cookies');
+            $('#a4').css('font-weight', 'bold');
         }
     }
 

@@ -110,3 +110,31 @@ body {
   font-weight: bold;
   text-shadow: 0px 0px 4px #888;
 }
+
+#a1, #a2, #a3, #a4, #a5, #a6, #a7  {
+    display: none;  
+}
+
+@keyframes cursorText {
+    0%   {color: yellow;}
+    25%  {color: navajowhite;}
+    50%  {color: yellow;}
+    75%  {color: navajowhite;}
+    100%  {color: yellow;}
+}
+
+@keyframes grandmaText {
+    0%   {color: yellow;}
+    25%  {color: navajowhite;}
+    50%  {color: yellow;}
+    75%  {color: navajowhite;}
+    100%  {color: yellow;}
+}
+
+@keyframes clickerText {
+    0%   {color: yellow;}
+    25%  {color: navajowhite;}
+    50%  {color: yellow;}
+    75%  {color: navajowhite;}
+    100%  {color: yellow;}
+}
